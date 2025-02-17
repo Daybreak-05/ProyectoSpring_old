@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tablón de Anuncios - Aventuras y Misiones</title>
+    <style>
+        /* Estilos generales del cuerpo */
+        body {
+            font-family: 'MedievalSharp', sans-serif;
+            background-image: url('../Tavern.jpg');
+            background-size: cover;
+            background-position: center center;
+            color: white;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Estilo del encabezado */
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 3rem;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9);
+            letter-spacing: 2px;
+        }
+
+        /* Estilo de los enlaces */
+        a {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 3px;
+            border: 2px solid #FFD700;
+
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #FFD700;
+            color: #000;
+        }
+
+        /* Estilos de los items de anuncios */
+        .anuncio-item {
+            padding: 30px 50px;
+            margin-bottom: 20px;
+            border: 2px solid #FFD700;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .anuncio-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .anuncio-item a {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .anuncio-item span {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        /* Estilo de los anuncios completados */
+        .completado {
+            top: 5%;
+            color: green;
+            font-weight: bold;
+        }
+
+        /* Estilo para botones de completar misión */
+        button {
+            background-color: #FFD700;
+            color: #000;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4CAF50;
+        }
+
+        /* Estilo para el formulario dentro de los anuncios */
+        form {
+            display: inline;
+        }
+
+        /* Estilo de la lista de anuncios */
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        li {
+            margin: 20px 0;
+        }
+
+        /* Estilo de la sección de bienvenida */
+        .bienvenida p {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Mejorar el contraste de los botones de acción */
+        .anuncio-item button {
+            background-color: transparent;
+            color: #FFD700;
+            border: 2px solid #FFD700;
+            margin-top: 10px;
+        }
+
+        .anuncio-item button:hover {
+            background-color: #FFD700;
+            color: #000;
+        }
+        p{
+            font-size: 28px;
+
+        }
+        .anuncio-title{
+            padding: 6px 20px;
+            background-color: rgba(000, 000, 000, 0.6);
+            border-radius: 10px ;
+
+        }
+    </style>
+</head>
+<body>
+<div class="anuncio-title">
+    <h1>Bienvenido a la Taverna de Anuncios</h1>
+    <div th:if="${bienvenida}">
+        <p th:text="${bienvenida}"></p>
+    </div>
+</div>
+<div>
+    <ul>
+        <li th:each="anuncio : ${anuncios}" class="anuncio-item">
+            <a th:href="@{/anuncios/ver/{nombre}(nombre=${anuncio.nombre})}" th:text="${anuncio.nombre}">Nombre Anuncio</a> -
+            <span th:text="${anuncio.asunto}">Asunto</span> -
+            <span th:text="${anuncio.tipo}">Tipo de Anuncio</span>
+            <span th:if="${anuncio.tipo == 'Misión'}">
+                <span th:class="${anuncio.completado ? 'completado' : ''}" th:text="${anuncio.completado ? 'Completada' : 'Pendiente'}"></span>
+                <span th:if="${!anuncio.completado}">
+                    <form action="#" th:action="@{/anuncios/completar/{nombre}(nombre=${anuncio.nombre})}" method="post">
+                        <button type="submit">Marcar como completada</button>
+                    </form>
+                </span>
+            </span>
+        </li>
+    </ul>
+</div>
+<a href="/anuncios/crear">Crear un nuevo anuncio</a>
+</body>
+</html>
